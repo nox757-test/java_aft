@@ -1,44 +1,41 @@
-package ru.chibisov.aft.addressbook;
+package ru.chibisov.aft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import ru.chibisov.aft.addressbook.model.ContactData;
+import ru.chibisov.aft.addressbook.model.GroupData;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.fail;
 
-public class TestBase {
+public class ApplicationManager {
 
     private WebDriver driver;
-    private String baseUrl;
     private StringBuffer verificationErrors = new StringBuffer();
 
-    @BeforeMethod(alwaysRun = true)
-    public void setUp() throws Exception {
+    public void init() {
         System.setProperty("webdriver.chrome.driver", "D:\\WorkCovid\\git\\java_aft\\addressbook-web-tests\\src\\test\\resources\\driver\\chromedriver.exe");
         driver = new ChromeDriver();
-        baseUrl = "https://www.google.com/";
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-
+        driver.get("http://localhost/addressbook/");
         login("admin", "secret");
     }
 
-    protected void backToGroupPage() {
+    public void backToGroupPage() {
         driver.findElement(By.linkText("group page")).click();
     }
 
-    protected void submitCreationGroup() {
+    public void submitCreationGroup() {
         driver.findElement(By.name("submit")).click();
     }
 
-    protected void submitCreationContact() {
+    public void submitCreationContact() {
         driver.findElement(By.name("submit")).click();
     }
 
-    protected void fillCreationGroup(GroupData groupData) {
+    public void fillCreationGroup(GroupData groupData) {
         driver.findElement(By.name("group_name")).click();
         driver.findElement(By.name("group_name")).clear();
         driver.findElement(By.name("group_name")).sendKeys(groupData.getName());
@@ -50,7 +47,7 @@ public class TestBase {
         driver.findElement(By.name("group_footer")).sendKeys(groupData.getFooter());
     }
 
-    protected void fillCreationContact(ContactData contactData) {
+    public void fillCreationContact(ContactData contactData) {
         driver.findElement(By.name("firstname")).click();
         driver.findElement(By.name("firstname")).clear();
         driver.findElement(By.name("firstname")).sendKeys(contactData.getFirstName());
@@ -65,20 +62,19 @@ public class TestBase {
         driver.findElement(By.name("nickname")).sendKeys(contactData.getNickName());
     }
 
-    protected void openCreationGroupPage() {
+    public void openCreationGroupPage() {
         driver.findElement(By.name("new")).click();
     }
 
-    protected void openCreationContactPage() {
+    public void openCreationContactPage() {
         driver.findElement(By.linkText("add new")).click();
     }
 
-    protected void openGroupPage() {
+    public void openGroupPage() {
         driver.findElement(By.linkText("groups")).click();
     }
 
     private void login(String login, String pass) {
-        driver.get("http://localhost/addressbook/group.php");
         driver.findElement(By.name("user")).click();
         driver.findElement(By.name("user")).clear();
         driver.findElement(By.name("user")).sendKeys(login);
@@ -88,12 +84,11 @@ public class TestBase {
         driver.findElement(By.xpath("//input[@value='Login']")).click();
     }
 
-    @AfterMethod(alwaysRun = true)
-    public void tearDown() throws Exception {
-        driver.quit();
+    public void quit() {
         String verificationErrorString = verificationErrors.toString();
         if (!"".equals(verificationErrorString)) {
             fail(verificationErrorString);
         }
+        driver.quit();
     }
 }

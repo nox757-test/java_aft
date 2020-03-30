@@ -1,4 +1,4 @@
-package ru.chibisov.aft.addressbook;
+package ru.chibisov.aft.addressbook.model;
 
 public class GroupData {
     private final String header;
