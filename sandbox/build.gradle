@@ -1,3 +1,15 @@
 apply plugin: 'java'
 apply plugin: 'application'
 mainClassName = "ru.chibisov.aft.sandbox.MyFirstProgramm"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.testng:testng:6.9.10'
+}
+
+test {
+    useTestNG()
+}
