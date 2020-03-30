@@ -6,6 +6,7 @@ repositories {
 
 dependencies {
     testImplementation 'org.testng:testng:6.9.10'
+    compile "org.seleniumhq.selenium:selenium-java:3.141.59"
 }
 
 test {
