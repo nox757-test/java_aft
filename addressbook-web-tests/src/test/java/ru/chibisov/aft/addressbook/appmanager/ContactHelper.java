@@ -4,33 +4,25 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import ru.chibisov.aft.addressbook.model.ContactData;
 
-public class ContactHelper {
-    private final WebDriver driver;
+public class ContactHelper extends BaseHelper {
 
     public ContactHelper(WebDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     public void openCreationContactPage() {
-        driver.findElement(By.linkText("add new")).click();
+        clickByElement(By.linkText("add new"));
     }
 
     public void submitCreationContact() {
-        driver.findElement(By.name("submit")).click();
+        clickByElement(By.name("submit"));
     }
 
     public void fillCreationContact(ContactData contactData) {
-        driver.findElement(By.name("firstname")).click();
-        driver.findElement(By.name("firstname")).clear();
-        driver.findElement(By.name("firstname")).sendKeys(contactData.getFirstName());
-        driver.findElement(By.name("middlename")).click();
-        driver.findElement(By.name("middlename")).clear();
-        driver.findElement(By.name("middlename")).sendKeys(contactData.getMiddleName());
-        driver.findElement(By.name("lastname")).click();
-        driver.findElement(By.name("lastname")).clear();
-        driver.findElement(By.name("lastname")).sendKeys(contactData.getLastName());
-        driver.findElement(By.name("nickname")).click();
-        driver.findElement(By.name("nickname")).clear();
-        driver.findElement(By.name("nickname")).sendKeys(contactData.getNickName());
+        inputType(By.name("firstname"), contactData.getFirstName());
+        inputType(By.name("middlename"), contactData.getMiddleName());
+        inputType(By.name("lastname"), contactData.getLastName());
+        inputType(By.name("nickname"), contactData.getNickName());
     }
+
 }
