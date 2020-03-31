@@ -12,4 +12,12 @@ public class NavigationHelper extends BaseHelper {
     public void openGroupPage() {
         clickByElement(By.linkText("groups"));
     }
+
+    public void openCreationContactPage() {
+        clickByElement(By.linkText("add new"));
+    }
+
+    public void openContactPage() {
+        clickByElement(By.linkText("home"));
+    }
 }
