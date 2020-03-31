@@ -1,9 +1,6 @@
 package ru.chibisov.aft.addressbook.appmanager;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
-import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.fail;
 
@@ -17,10 +14,15 @@ public class ApplicationManager {
     private GroupHelper groupHelper;
     private NavigationHelper navigationHelper;
 
+    private final String browserType;
+
+    public ApplicationManager(String browserType) {
+        this.browserType = browserType;
+    }
+
     public void init() {
-        System.setProperty("webdriver.chrome.driver", "D:\\WorkCovid\\git\\java_aft\\addressbook-web-tests\\src\\test\\resources\\driver\\chromedriver.exe");
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+        driver = BrowserTypes.getType(browserType).create();
 
         sessionHelper = new SessionHelper(driver);
         contactHelper = new ContactHelper(driver);
