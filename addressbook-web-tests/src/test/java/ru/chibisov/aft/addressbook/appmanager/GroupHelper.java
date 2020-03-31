@@ -34,25 +34,24 @@ public class GroupHelper extends BaseHelper {
         clickByElement(By.name("new"));
     }
 
-    public void fillCreationGroup(GroupData groupData) {
+    public void fillGroup(GroupData groupData) {
         inputType(By.name("group_name"), groupData.getName());
         inputType(By.name("group_header"), groupData.getHeader());
         inputType(By.name("group_footer"), groupData.getFooter());
     }
 
-    public void fillChangeGroup(GroupData groupData) {
-        if (groupData.getName() != null) {
-            inputType(By.name("group_name"), groupData.getName());
-        }
-        if (groupData.getHeader() != null) {
-            inputType(By.name("group_header"), groupData.getHeader());
-        }
-        if (groupData.getFooter() != null) {
-            inputType(By.name("group_footer"), groupData.getFooter());
-        }
-    }
-
     public void selectGroup(int numRow) {
         selectCheckbox(By.name("selected[]"), numRow);
+    }
+
+    public boolean isThereGroup() {
+        return isElementPresent(By.name("selected[]"));
+    }
+
+    public void createNewGroup() {
+        openCreationGroupPage();
+        fillGroup(new GroupData("default_header", "default_name", "default_footer"));
+        submitCreationGroup();
+        backToGroupPage();
     }
 }

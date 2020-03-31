@@ -1,6 +1,7 @@
 package ru.chibisov.aft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import ru.chibisov.aft.addressbook.model.ContactData;
 
@@ -26,33 +27,43 @@ public class ContactHelper extends BaseHelper {
         clickByElement(By.xpath(".//*[@value='Delete']"));
     }
 
-    public void fillCreationContact(ContactData contactData) {
+    public void fillContact(ContactData contactData, boolean isCreate) {
         inputType(By.name("firstname"), contactData.getFirstName());
         inputType(By.name("middlename"), contactData.getMiddleName());
         inputType(By.name("lastname"), contactData.getLastName());
         inputType(By.name("nickname"), contactData.getNickName());
+
+        By groupLocator = By.name("new_group");
+        if (isCreate) {
+            if (!isElementPresent(groupLocator)) {
+                throw new NoSuchElementException("No found element " + groupLocator.toString());
+            }
+            selectDropDown(groupLocator, contactData.getGroupName());
+        } else {
+            if (isElementPresent(By.name("new_group"))) {
+                throw new RuntimeException("Element doesn't be here " + groupLocator.toString());
+            }
+        }
     }
 
     public void selectContact(int numRow) {
         selectCheckbox(By.name("selected[]"), numRow);
     }
 
+    public boolean isThereContact() {
+        return isElementPresent(By.name("selected[]"));
+    }
+
     public void acceptAlterDelete() {
         closeAlert(true);
     }
 
-    public void changeCreationContact(ContactData contactData) {
-        if (contactData.getFirstName() != null) {
-            inputType(By.name("firstname"), contactData.getFirstName());
-        }
-        if (contactData.getMiddleName() != null) {
-            inputType(By.name("middlename"), contactData.getMiddleName());
-        }
-        if (contactData.getLastName() != null) {
-            inputType(By.name("lastname"), contactData.getLastName());
-        }
-        if (contactData.getNickName() != null) {
-            inputType(By.name("nickname"), contactData.getNickName());
-        }
+    public void createNewContact() {
+        new NavigationHelper(this.driver).openCreationContactPage();
+        fillContact(new ContactData("default_name", "default_name", "default_name", "nickname")
+                        .setGroupName("[none]"),
+                true);
+        submitCreationContact();
     }
+
 }

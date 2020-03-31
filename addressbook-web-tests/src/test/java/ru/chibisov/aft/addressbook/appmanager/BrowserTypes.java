@@ -24,7 +24,7 @@ public enum BrowserTypes {
             options.setBinary("C:\\Users\\nox757\\AppData\\Local\\Yandex\\YandexBrowser\\Application\\browser.exe");
             System.setProperty("webdriver.chrome.driver", "D:\\WorkCovid\\git\\java_aft\\addressbook-web-tests\\src\\test\\resources\\driver\\chromedriver.exe");
             WebDriver driver = new ChromeDriver(options);
-            driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             return driver;
         }
     };
