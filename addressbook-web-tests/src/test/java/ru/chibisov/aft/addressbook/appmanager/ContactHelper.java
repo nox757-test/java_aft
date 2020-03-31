@@ -3,7 +3,11 @@ package ru.chibisov.aft.addressbook.appmanager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import ru.chibisov.aft.addressbook.model.ContactData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactHelper extends BaseHelper {
 
@@ -66,4 +70,17 @@ public class ContactHelper extends BaseHelper {
         submitCreationContact();
     }
 
+    public List<ContactData> getContactList() {
+        List<WebElement> elements = getListElements(By.xpath(".//tr[@name='entry']"));
+        List<ContactData> contactData = new ArrayList<>();
+        for (WebElement element : elements) {
+            contactData.add(
+                    new ContactData(element.findElement(By.xpath(".//td[3]")).getText(),
+                            null,
+                            element.findElement(By.xpath(".//td[2]")).getText(),
+                            null)
+            );
+        }
+        return contactData;
+    }
 }

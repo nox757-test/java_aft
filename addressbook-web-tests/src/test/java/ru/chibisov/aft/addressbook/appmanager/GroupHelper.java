@@ -2,7 +2,11 @@ package ru.chibisov.aft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import ru.chibisov.aft.addressbook.model.GroupData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupHelper extends BaseHelper {
 
@@ -53,5 +57,19 @@ public class GroupHelper extends BaseHelper {
         fillGroup(new GroupData("default_header", "default_name", "default_footer"));
         submitCreationGroup();
         backToGroupPage();
+    }
+
+    public List<GroupData> getGroupList() {
+        List<WebElement> groupList = getListElements(By.xpath(".//span[@class='group']"));
+        List<GroupData> groupDataList = new ArrayList<>();
+        for (WebElement element : groupList) {
+            groupDataList.add(
+                    new GroupData(Integer.parseInt(element.findElement(By.name("selected[]")).getAttribute("value")),
+                            null,
+                            element.getText().trim(),
+                            null)
+            );
+        }
+        return groupDataList;
     }
 }

@@ -68,4 +68,8 @@ public class BaseHelper {
         return "";
     }
 
+    protected List<WebElement> getListElements(By locator) {
+        return driver.findElements(locator);
+    }
+
 }
