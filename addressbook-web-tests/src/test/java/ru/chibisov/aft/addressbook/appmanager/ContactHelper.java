@@ -31,7 +31,7 @@ public class ContactHelper extends BaseHelper {
         clickByElement(By.xpath(".//*[@value='Delete']"));
     }
 
-    public void fillContact(ContactData contactData, boolean isCreate) {
+    public void fillForm(ContactData contactData, boolean isCreate) {
         inputType(By.name("firstname"), contactData.getFirstName());
         inputType(By.name("middlename"), contactData.getMiddleName());
         inputType(By.name("lastname"), contactData.getLastName());
@@ -62,15 +62,15 @@ public class ContactHelper extends BaseHelper {
         closeAlert(true);
     }
 
-    public void createNewContact() {
+    public void createNew() {
         new NavigationHelper(this.driver).openCreationContactPage();
-        fillContact(new ContactData("default_name", "default_name", "default_name", "nickname")
+        fillForm(new ContactData("default_name", "default_name", "default_name", "nickname")
                         .setGroupName("[none]"),
                 true);
         submitCreationContact();
     }
 
-    public List<ContactData> getContactList() {
+    public List<ContactData> list() {
         List<WebElement> elements = getListElements(By.xpath(".//tr[@name='entry']"));
         List<ContactData> contactData = new ArrayList<>();
         for (WebElement element : elements) {
@@ -82,5 +82,17 @@ public class ContactHelper extends BaseHelper {
             );
         }
         return contactData;
+    }
+
+    public void delete(int deletedRowIndex) {
+        selectContact(deletedRowIndex);
+        pressDeleteButton();
+        acceptAlterDelete();
+    }
+
+    public void modify(int changedRowIndex, ContactData contactData) {
+        pressEditButtonInRow(changedRowIndex);
+        fillForm(contactData, false);
+        pressUpdateButton();
     }
 }

@@ -1,20 +1,20 @@
 package ru.chibisov.aft.addressbook.tests;
 
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import ru.chibisov.aft.addressbook.appmanager.ApplicationManager;
 import ru.chibisov.aft.addressbook.appmanager.BrowserTypes;
 
 public class TestBase {
 
-    protected final ApplicationManager app = new ApplicationManager(BrowserTypes.YANDEX.name());
+    protected static final ApplicationManager app = new ApplicationManager(BrowserTypes.YANDEX.name());
 
-    @BeforeMethod(alwaysRun = true)
+    @BeforeSuite(alwaysRun = true)
     public void setUp() {
         app.init();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterSuite(alwaysRun = true)
     public void tearDown() {
         app.quit();
     }

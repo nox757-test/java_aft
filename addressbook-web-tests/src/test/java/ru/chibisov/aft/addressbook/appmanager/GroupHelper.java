@@ -18,7 +18,7 @@ public class GroupHelper extends BaseHelper {
         clickByElement(By.linkText("group page"));
     }
 
-    public void submitCreationGroup() {
+    public void pressSubmitButton() {
         clickByElement(By.name("submit"));
     }
 
@@ -38,7 +38,7 @@ public class GroupHelper extends BaseHelper {
         clickByElement(By.name("new"));
     }
 
-    public void fillGroup(GroupData groupData) {
+    public void fillForm(GroupData groupData) {
         inputType(By.name("group_name"), groupData.getName());
         inputType(By.name("group_header"), groupData.getHeader());
         inputType(By.name("group_footer"), groupData.getFooter());
@@ -52,14 +52,14 @@ public class GroupHelper extends BaseHelper {
         return isElementPresent(By.name("selected[]"));
     }
 
-    public void createNewGroup() {
+    public void createNew() {
         openCreationGroupPage();
-        fillGroup(new GroupData("default_header", "default_name", "default_footer"));
-        submitCreationGroup();
+        fillForm(new GroupData("default_header", "default_name", "default_footer"));
+        pressSubmitButton();
         backToGroupPage();
     }
 
-    public List<GroupData> getGroupList() {
+    public List<GroupData> list() {
         List<WebElement> groupList = getListElements(By.xpath(".//span[@class='group']"));
         List<GroupData> groupDataList = new ArrayList<>();
         for (WebElement element : groupList) {
@@ -71,5 +71,19 @@ public class GroupHelper extends BaseHelper {
             );
         }
         return groupDataList;
+    }
+
+    public void delete(int deletedRowIndex) {
+        selectGroup(deletedRowIndex);
+        pressDeleteButton();
+        backToGroupPage();
+    }
+
+    public void modify(int changedRowIndex, GroupData changedData) {
+        selectGroup(changedRowIndex);
+        pressEditButton();
+        fillForm(changedData);
+        pressUpdateButton();
+        backToGroupPage();
     }
 }

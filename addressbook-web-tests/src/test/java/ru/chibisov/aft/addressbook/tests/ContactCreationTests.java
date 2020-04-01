@@ -11,14 +11,14 @@ public class ContactCreationTests extends TestBase {
 
     @Test
     public void testNewContactCreation() {
-        List<ContactData> dataListBefore = app.getContactHelper().getContactList();
-        app.getNavigationHelper().openCreationContactPage();
+        List<ContactData> dataListBefore = app.contact().list();
+        app.goTo().openCreationContactPage();
         ContactData contactData = new ContactData("f_name", "mid_name", "last_name", "nickname")
                 .setGroupName("[none]");
-        app.getContactHelper().fillContact(contactData, true);
-        app.getContactHelper().submitCreationContact();
+        app.contact().fillForm(contactData, true);
+        app.contact().submitCreationContact();
 
-        List<ContactData> dataListAfter = app.getContactHelper().getContactList();
+        List<ContactData> dataListAfter = app.contact().list();
         Comparator<ContactData> comparator = Comparator.comparing(ContactData::getLastName).thenComparing(ContactData::getFirstName);
         dataListBefore.add(contactData);
         dataListAfter.sort(comparator);

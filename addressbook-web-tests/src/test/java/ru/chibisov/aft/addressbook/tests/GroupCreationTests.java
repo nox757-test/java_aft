@@ -11,15 +11,15 @@ public class GroupCreationTests extends TestBase {
 
     @Test
     public void testNewGroupCreation() throws Exception {
-        app.getNavigationHelper().openGroupPage();
-        List<GroupData> dataListBefore = app.getGroupHelper().getGroupList();
-        app.getGroupHelper().openCreationGroupPage();
+        app.goTo().groupPage();
+        List<GroupData> dataListBefore = app.group().list();
+        app.group().openCreationGroupPage();
         GroupData addedGroup = new GroupData("group_header", "group_name", "group_footer");
-        app.getGroupHelper().fillGroup(addedGroup);
-        app.getGroupHelper().submitCreationGroup();
-        app.getGroupHelper().backToGroupPage();
+        app.group().fillForm(addedGroup);
+        app.group().pressSubmitButton();
+        app.group().backToGroupPage();
 
-        List<GroupData> dataListAfter = app.getGroupHelper().getGroupList();
+        List<GroupData> dataListAfter = app.group().list();
         int id = dataListAfter.stream().max(Comparator.comparingInt(GroupData::getId)).get().getId();
         Comparator<GroupData> comparator = Comparator.comparing(GroupData::getName);
         dataListBefore.add(addedGroup.setId(id));

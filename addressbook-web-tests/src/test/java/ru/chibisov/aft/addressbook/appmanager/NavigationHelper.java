@@ -9,7 +9,7 @@ public class NavigationHelper extends BaseHelper {
         super(driver);
     }
 
-    public void openGroupPage() {
+    public void groupPage() {
         clickByElement(By.linkText("groups"));
     }
 
