@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import ru.chibisov.aft.addressbook.model.ContactData;
 import ru.chibisov.aft.addressbook.model.Contacts;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ContactHelper extends BaseHelper {
@@ -40,6 +41,13 @@ public class ContactHelper extends BaseHelper {
         inputType(By.name("middlename"), contactData.getMiddleName());
         inputType(By.name("lastname"), contactData.getLastName());
         inputType(By.name("nickname"), contactData.getNickName());
+        inputType(By.name("address"), contactData.getPostAddress());
+        inputType(By.name("email"), contactData.getEmail1());
+        inputType(By.name("email2"), contactData.getEmail2());
+        inputType(By.name("email3"), contactData.getEmail3());
+        inputType(By.name("mobile"), contactData.getMobilePhone());
+        inputType(By.name("home"), contactData.getHomePhone());
+        inputType(By.name("work"), contactData.getWorkPhone());
 
         By groupLocator = By.name("new_group");
         if (isCreate) {
@@ -81,6 +89,14 @@ public class ContactHelper extends BaseHelper {
         submitCreationContact();
     }
 
+    public void createNew(ContactData contactData) {
+        new NavigationHelper(this.driver).openCreationContactPage();
+        fillForm(contactData,
+                true);
+        submitCreationContact();
+        contactData.setId(all().stream().mapToInt(ContactData::getId).max().getAsInt());
+    }
+
     public void delete(ContactData deletedRowIndex) {
         selectContactById(deletedRowIndex.getId());
         pressDeleteButton();
@@ -104,4 +120,41 @@ public class ContactHelper extends BaseHelper {
         }
         return contacts;
     }
+
+    public ContactData getRowById(int id) {
+        WebElement element = driver.findElement(By.xpath(".//tr[@name='entry' and .//input[@id='" + id + "']]"));
+        String emailCellText = element.findElement(By.xpath(".//td[5]")).getText();
+        List<String> allEmails = (emailCellText != null && !emailCellText.isEmpty()) ? Arrays.asList(emailCellText.split("\n")) : null;
+        return new ContactData().setFirstName(element.findElement(By.xpath(".//td[3]")).getText())
+                .setLastName(element.findElement(By.xpath(".//td[2]")).getText())
+                .setPostAddress(element.findElement(By.xpath(".//td[4]")).getText())
+                .setAllPhones(element.findElement(By.xpath(".//td[6]")).getText())
+                .setAllEmails(allEmails)
+                .setId(id);
+    }
+
+    public ContactData infoFromEditForm(ContactData contactData) {
+        pressEditButtonById(contactData.getId());
+        String lastName = driver.findElement(By.xpath(".//*[@name='lastname']")).getAttribute("value");
+        String firstName = driver.findElement(By.xpath(".//*[@name='firstname']")).getAttribute("value");
+        String postAddress = driver.findElement(By.xpath(".//*[@name='address']")).getText();
+        String mobilePhone = driver.findElement(By.xpath(".//*[@name='mobile']")).getAttribute("value");
+        String homePhone = driver.findElement(By.xpath(".//*[@name='home']")).getAttribute("value");
+        String workPhone = driver.findElement(By.xpath(".//*[@name='work']")).getAttribute("value");
+        String email1 = driver.findElement(By.xpath(".//*[@name='email']")).getAttribute("value");
+        String email2 = driver.findElement(By.xpath(".//*[@name='email2']")).getAttribute("value");
+        String email3 = driver.findElement(By.xpath(".//*[@name='email3']")).getAttribute("value");
+
+        return new ContactData().setId(contactData.getId())
+                .setLastName(lastName)
+                .setFirstName(firstName)
+                .setPostAddress(postAddress)
+                .setEmail1(email1)
+                .setEmail2(email2)
+                .setEmail2(email3)
+                .setMobilePhone(mobilePhone)
+                .setHomePhone(homePhone)
+                .setWorkPhone(workPhone);
+    }
+
 }

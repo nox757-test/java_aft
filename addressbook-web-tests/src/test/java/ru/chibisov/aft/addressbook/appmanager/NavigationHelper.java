@@ -17,7 +17,7 @@ public class NavigationHelper extends BaseHelper {
         clickByElement(By.linkText("add new"));
     }
 
-    public void openContactPage() {
+    public void contactPage() {
         clickByElement(By.linkText("home"));
     }
 

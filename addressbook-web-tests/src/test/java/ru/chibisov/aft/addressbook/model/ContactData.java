@@ -1,5 +1,8 @@
 package ru.chibisov.aft.addressbook.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContactData {
 
     private int id;
@@ -8,6 +11,20 @@ public class ContactData {
     private String lastName;
     private String nickName;
     private String groupName;
+
+    private String mobilePhone;
+    private String homePhone;
+    private String workPhone;
+    private String allPhones;
+
+    private String postAddress;
+    private String email1;
+    private String email2;
+    private String email3;
+    private List<String> allEmails = null;
+
+    public ContactData() {
+    }
 
     public String getFirstName() {
         return firstName;
@@ -60,6 +77,96 @@ public class ContactData {
 
     public ContactData setId(int id) {
         this.id = id;
+        return this;
+    }
+
+    public String getEmail1() {
+        return email1;
+    }
+
+    public ContactData setEmail1(String email1) {
+        this.email1 = email1;
+        return this;
+    }
+
+    public String getEmail2() {
+        return email2;
+    }
+
+    public ContactData setEmail2(String email2) {
+        this.email2 = email2;
+        return this;
+    }
+
+    public String getEmail3() {
+        return email3;
+    }
+
+    public ContactData setEmail3(String email3) {
+        this.email3 = email3;
+        return this;
+    }
+
+    public List<String> getAllEmails() {
+        if (allEmails == null || allEmails.isEmpty()) {
+            allEmails = new ArrayList<String>() {
+                {
+                    if (email1 != null && !email1.isEmpty()) add(email1);
+                    if (email2 != null && !email2.isEmpty()) add(email2);
+                    if (email3 != null && !email3.isEmpty()) add(email3);
+                }
+            };
+        }
+        return allEmails;
+    }
+
+    public ContactData setAllEmails(List<String> allEmails) {
+        this.allEmails = allEmails;
+        return this;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public ContactData setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+        return this;
+    }
+
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+    public ContactData setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+        return this;
+    }
+
+    public String getWorkPhone() {
+        return workPhone;
+    }
+
+    public ContactData setWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
+        return this;
+    }
+
+    public String getAllPhones() {
+        return allPhones;
+    }
+
+    public ContactData setAllPhones(String allPhones) {
+        this.allPhones = allPhones;
+        return this;
+    }
+
+    public String getPostAddress() {
+        return postAddress;
+    }
+
+    public ContactData setPostAddress(String postAddress) {
+        this.postAddress = postAddress;
         return this;
     }
 
