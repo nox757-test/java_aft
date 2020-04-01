@@ -1,22 +1,11 @@
 package ru.chibisov.aft.addressbook.model;
 
 public class GroupData {
-    private final String header;
-    private final String name;
-    private final String footer;
 
     private int id;
-
-    public GroupData(String header, String name, String footer) {
-        this(-1, header, name, footer);
-    }
-
-    public GroupData(int id, String header, String name, String footer) {
-        this.id = id;
-        this.header = header;
-        this.name = name;
-        this.footer = footer;
-    }
+    private String header;
+    private String name;
+    private String footer;
 
     public String getHeader() {
         return header;
@@ -36,6 +25,21 @@ public class GroupData {
 
     public GroupData setId(int id) {
         this.id = id;
+        return this;
+    }
+
+    public GroupData setHeader(String header) {
+        this.header = header;
+        return this;
+    }
+
+    public GroupData setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public GroupData setFooter(String footer) {
+        this.footer = footer;
         return this;
     }
 

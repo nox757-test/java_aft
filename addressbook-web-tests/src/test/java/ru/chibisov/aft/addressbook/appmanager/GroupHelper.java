@@ -4,8 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import ru.chibisov.aft.addressbook.model.GroupData;
+import ru.chibisov.aft.addressbook.model.Groups;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GroupHelper extends BaseHelper {
@@ -48,42 +48,44 @@ public class GroupHelper extends BaseHelper {
         selectCheckbox(By.name("selected[]"), numRow);
     }
 
+    public void selectGroupById(int id) {
+        clickByElement(By.xpath(".//*[@name='selected[]' and @value='" + id + "']"));
+    }
+
     public boolean isThereGroup() {
         return isElementPresent(By.name("selected[]"));
     }
 
     public void createNew() {
         openCreationGroupPage();
-        fillForm(new GroupData("default_header", "default_name", "default_footer"));
+        fillForm(new GroupData().setHeader("default_header")
+                .setName("default_name")
+                .setFooter("default_footer"));
         pressSubmitButton();
         backToGroupPage();
     }
 
-    public List<GroupData> list() {
-        List<WebElement> groupList = getListElements(By.xpath(".//span[@class='group']"));
-        List<GroupData> groupDataList = new ArrayList<>();
-        for (WebElement element : groupList) {
-            groupDataList.add(
-                    new GroupData(Integer.parseInt(element.findElement(By.name("selected[]")).getAttribute("value")),
-                            null,
-                            element.getText().trim(),
-                            null)
-            );
-        }
-        return groupDataList;
-    }
-
-    public void delete(int deletedRowIndex) {
-        selectGroup(deletedRowIndex);
+    public void delete(GroupData groupData) {
+        selectGroupById(groupData.getId());
         pressDeleteButton();
         backToGroupPage();
     }
 
-    public void modify(int changedRowIndex, GroupData changedData) {
-        selectGroup(changedRowIndex);
+    public void modify(GroupData changedData) {
+        selectGroupById(changedData.getId());
         pressEditButton();
         fillForm(changedData);
         pressUpdateButton();
         backToGroupPage();
+    }
+
+    public Groups all() {
+        List<WebElement> groupList = getListElements(By.xpath(".//span[@class='group']"));
+        Groups groups = new Groups();
+        for (WebElement element : groupList) {
+            groups.add(new GroupData().setId(Integer.parseInt(element.findElement(By.name("selected[]")).getAttribute("value")))
+                    .setName(element.getText().trim()));
+        }
+        return groups;
     }
 }

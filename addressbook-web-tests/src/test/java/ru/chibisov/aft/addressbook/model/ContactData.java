@@ -2,18 +2,12 @@ package ru.chibisov.aft.addressbook.model;
 
 public class ContactData {
 
-    private final String firstName;
-    private final String middleName;
-    private final String lastName;
-    private final String nickName;
+    private int id;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private String nickName;
     private String groupName;
-
-    public ContactData(String firstName, String middleName, String lastName, String nickName) {
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.nickName = nickName;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -40,6 +34,55 @@ public class ContactData {
         return this;
     }
 
+    public ContactData setFirstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public ContactData setMiddleName(String middleName) {
+        this.middleName = middleName;
+        return this;
+    }
+
+    public ContactData setLastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+    public ContactData setNickName(String nickName) {
+        this.nickName = nickName;
+        return this;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public ContactData setId(int id) {
+        this.id = id;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ContactData that = (ContactData) o;
+
+        if (id != that.id) return false;
+        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
+        return lastName != null ? lastName.equals(that.lastName) : that.lastName == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        return result;
+    }
+
     @Override
     public String toString() {
         return "ContactData{" +
@@ -51,21 +94,4 @@ public class ContactData {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ContactData that = (ContactData) o;
-
-        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
-        return lastName != null ? lastName.equals(that.lastName) : that.lastName == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = firstName != null ? firstName.hashCode() : 0;
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        return result;
-    }
 }

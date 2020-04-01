@@ -1,12 +1,11 @@
 package ru.chibisov.aft.addressbook.tests;
 
-import org.testng.Assert;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.chibisov.aft.addressbook.model.ContactData;
-
-import java.util.Comparator;
-import java.util.List;
+import ru.chibisov.aft.addressbook.model.Contacts;
 
 public class ContactEditTest extends TestBase {
 
@@ -18,28 +17,18 @@ public class ContactEditTest extends TestBase {
     }
 
     @Test
-    public void updateFirstContract() {
+    public void updateContactTest() {
         generatePreconditions();
-        List<ContactData> dataListBefore = app.contact().list();
-        int changedRowIndex = dataListBefore.size() - 1;
-        ContactData contactData = new ContactData(null, "mid_name2", "last_name2", "nickname2");
-        app.contact().modify(changedRowIndex, contactData);
+        Contacts dataBefore = app.contact().all();
+        ContactData contactData = dataBefore.iterator().next();
+        contactData = contactData.setMiddleName("mid_name2")
+                .setLastName("last_name2")
+                .setNickName("nickname2");
+        app.contact().modify(contactData);
 
-        List<ContactData> dataListAfter = app.contact().list();
-        Comparator<ContactData> comparator = Comparator.comparing(ContactData::getLastName).thenComparing(ContactData::getFirstName);
-        dataListBefore.add(combineNewContactData(dataListBefore.get(changedRowIndex), contactData));
-        dataListBefore.remove(changedRowIndex);
-        dataListAfter.sort(comparator);
-        dataListBefore.sort(comparator);
-        Assert.assertEquals(dataListAfter, dataListBefore);
+        Contacts contactsAfter = app.contact().all();
+        MatcherAssert.assertThat(contactsAfter, CoreMatchers.equalTo(dataBefore.withAdd(contactData)));
+
     }
 
-    private ContactData combineNewContactData(ContactData oldData, ContactData newData) {
-        return new ContactData(
-                newData.getFirstName() != null ? newData.getFirstName() : oldData.getFirstName(),
-                newData.getMiddleName() != null ? newData.getMiddleName() : oldData.getMiddleName(),
-                newData.getLastName() != null ? newData.getLastName() : oldData.getLastName(),
-                newData.getNickName() != null ? newData.getNickName() : oldData.getNickName()
-        );
-    }
 }

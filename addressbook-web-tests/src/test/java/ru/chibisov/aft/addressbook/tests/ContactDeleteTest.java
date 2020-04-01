@@ -1,12 +1,11 @@
 package ru.chibisov.aft.addressbook.tests;
 
-import org.testng.Assert;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.chibisov.aft.addressbook.model.ContactData;
-
-import java.util.Comparator;
-import java.util.List;
+import ru.chibisov.aft.addressbook.model.Contacts;
 
 public class ContactDeleteTest extends TestBase {
 
@@ -18,18 +17,14 @@ public class ContactDeleteTest extends TestBase {
     }
 
     @Test
-    public void deleteFirstContract() {
+    public void deleteContactTest() {
         generatePreconditions();
-        List<ContactData> dataListBefore = app.contact().list();
-        int deletedRowIndex = dataListBefore.size() - 1;
-        app.contact().delete(deletedRowIndex);
+        Contacts contactsBefore = app.contact().all();
+        ContactData deletedContact = contactsBefore.iterator().next();
+        app.contact().delete(deletedContact);
 
-        List<ContactData> dataListAfter = app.contact().list();
-        Comparator<ContactData> comparator = Comparator.comparing(ContactData::getLastName).thenComparing(ContactData::getFirstName);
-        dataListBefore.remove(deletedRowIndex);
-        dataListAfter.sort(comparator);
-        dataListBefore.sort(comparator);
-        Assert.assertEquals(dataListAfter, dataListBefore);
+        Contacts contactsAfter = app.contact().all();
+        MatcherAssert.assertThat(contactsAfter, CoreMatchers.equalTo(contactsBefore.withOut(deletedContact)));
 
     }
 

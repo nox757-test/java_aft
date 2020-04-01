@@ -1,31 +1,30 @@
 package ru.chibisov.aft.addressbook.tests;
 
-import org.testng.Assert;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.testng.annotations.Test;
 import ru.chibisov.aft.addressbook.model.GroupData;
-
-import java.util.Comparator;
-import java.util.List;
+import ru.chibisov.aft.addressbook.model.Groups;
 
 public class GroupCreationTests extends TestBase {
 
     @Test
-    public void testNewGroupCreation() throws Exception {
+    public void addGroupTest() {
         app.goTo().groupPage();
-        List<GroupData> dataListBefore = app.group().list();
+        Groups groupsBefore = app.group().all();
         app.group().openCreationGroupPage();
-        GroupData addedGroup = new GroupData("group_header", "group_name", "group_footer");
+        GroupData addedGroup = new GroupData().setId(-1)
+                .setHeader("group_header")
+                .setName("group_name")
+                .setFooter("group_footer");
         app.group().fillForm(addedGroup);
         app.group().pressSubmitButton();
         app.group().backToGroupPage();
 
-        List<GroupData> dataListAfter = app.group().list();
-        int id = dataListAfter.stream().max(Comparator.comparingInt(GroupData::getId)).get().getId();
-        Comparator<GroupData> comparator = Comparator.comparing(GroupData::getName);
-        dataListBefore.add(addedGroup.setId(id));
-        dataListAfter.sort(comparator);
-        dataListBefore.sort(comparator);
-        Assert.assertEquals(dataListAfter, dataListBefore);
+        Groups groupsAfter = app.group().all();
+        int id = groupsAfter.stream().mapToInt(GroupData::getId).max().getAsInt();
+        MatcherAssert.assertThat(groupsAfter, CoreMatchers.equalTo(groupsBefore.withAdd(addedGroup.setId(id))));
+
     }
 
 }

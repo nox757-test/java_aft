@@ -1,12 +1,11 @@
 package ru.chibisov.aft.addressbook.tests;
 
-import org.testng.Assert;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.chibisov.aft.addressbook.model.GroupData;
-
-import java.util.Comparator;
-import java.util.List;
+import ru.chibisov.aft.addressbook.model.Groups;
 
 public class GroupDeleteTest extends TestBase {
 
@@ -18,18 +17,15 @@ public class GroupDeleteTest extends TestBase {
     }
 
     @Test
-    public void deleteFirstGroupTest() {
+    public void deleteGroupTest() {
         app.goTo().groupPage();
         generatePreconditions();
-        List<GroupData> dataListBefore = app.group().list();
-        int deletedRowIndex = dataListBefore.size() - 1;
-        app.group().delete(deletedRowIndex);
+        Groups contactBefore = app.group().all();
+        GroupData deleteGroup = contactBefore.iterator().next();
+        app.group().delete(deleteGroup);
 
-        List<GroupData> dataListAfter = app.group().list();
-        Comparator<GroupData> comparator = Comparator.comparingInt(GroupData::getId);
-        dataListBefore.remove(deletedRowIndex);
-        dataListAfter.sort(comparator);
-        dataListBefore.sort(comparator);
-        Assert.assertEquals(dataListAfter, dataListBefore);
+        Groups contactAfter = app.group().all();
+        MatcherAssert.assertThat(contactAfter, CoreMatchers.equalTo(contactBefore.withOut(deleteGroup)));
+
     }
 }

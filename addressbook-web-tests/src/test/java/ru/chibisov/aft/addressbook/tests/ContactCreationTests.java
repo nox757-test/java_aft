@@ -1,28 +1,27 @@
 package ru.chibisov.aft.addressbook.tests;
 
-import org.testng.Assert;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.testng.annotations.Test;
 import ru.chibisov.aft.addressbook.model.ContactData;
-
-import java.util.Comparator;
-import java.util.List;
+import ru.chibisov.aft.addressbook.model.Contacts;
 
 public class ContactCreationTests extends TestBase {
 
     @Test
-    public void testNewContactCreation() {
-        List<ContactData> dataListBefore = app.contact().list();
+    public void addNewContactTest() {
+        Contacts contactsBefore = app.contact().all();
         app.goTo().openCreationContactPage();
-        ContactData contactData = new ContactData("f_name", "mid_name", "last_name", "nickname")
+        ContactData contactData = new ContactData().setFirstName("f_name")
+                .setMiddleName("mid_name")
+                .setLastName("last_name")
+                .setNickName("nickname")
                 .setGroupName("[none]");
         app.contact().fillForm(contactData, true);
         app.contact().submitCreationContact();
 
-        List<ContactData> dataListAfter = app.contact().list();
-        Comparator<ContactData> comparator = Comparator.comparing(ContactData::getLastName).thenComparing(ContactData::getFirstName);
-        dataListBefore.add(contactData);
-        dataListAfter.sort(comparator);
-        dataListBefore.sort(comparator);
-        Assert.assertEquals(dataListAfter, dataListBefore);
+        Contacts contactsAfter = app.contact().all();
+        int id = contactsAfter.stream().mapToInt(ContactData::getId).max().getAsInt();
+        MatcherAssert.assertThat(contactsAfter, CoreMatchers.equalTo(contactsBefore.withAdd(contactData.setId(id))));
     }
 }

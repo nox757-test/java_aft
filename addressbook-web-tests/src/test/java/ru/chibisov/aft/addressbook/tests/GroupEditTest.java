@@ -1,12 +1,11 @@
 package ru.chibisov.aft.addressbook.tests;
 
-import org.testng.Assert;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.chibisov.aft.addressbook.model.GroupData;
-
-import java.util.Comparator;
-import java.util.List;
+import ru.chibisov.aft.addressbook.model.Groups;
 
 public class GroupEditTest extends TestBase {
 
@@ -18,22 +17,16 @@ public class GroupEditTest extends TestBase {
     }
 
     @Test
-    public void editFirstGroupTest() {
+    public void editGroupTest() {
         app.goTo().groupPage();
         generatePreconditions();
-        List<GroupData> dataListBefore = app.group().list();
-        int changedRowIndex = dataListBefore.size() - 1;
-        GroupData changedData = new GroupData(null, "new_group_name", null);
-        app.group().modify(changedRowIndex, changedData);
+        Groups groupsBefore = app.group().all();
+        GroupData changedData = groupsBefore.iterator().next().setName("new_name_group2");
+        app.group().modify(changedData);
 
-        List<GroupData> dataListAfter = app.group().list();
-        Comparator<GroupData> comparator = Comparator.comparingInt(GroupData::getId);
-        int changedId = dataListBefore.stream().max(comparator).get().getId();
-        dataListBefore.remove(changedRowIndex);
-        dataListBefore.add(changedData.setId(changedId));
-        dataListAfter.sort(comparator);
-        dataListBefore.sort(comparator);
-        Assert.assertEquals(dataListAfter, dataListBefore);
+        Groups groupsAfter = app.group().all();
+        MatcherAssert.assertThat(groupsAfter, CoreMatchers.equalTo(groupsBefore));
+
     }
 
 }
