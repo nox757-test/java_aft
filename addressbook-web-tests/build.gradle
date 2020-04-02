@@ -8,6 +8,24 @@ dependencies {
     testImplementation 'org.testng:testng:6.9.10'
     compile "org.seleniumhq.selenium:selenium-java:3.141.59"
     compile "org.hamcrest:java-hamcrest:2.0.0.0"
+    compile "com.google.code.gson:gson:2.8.6"
+    compile "com.beust:jcommander:1.78"
+}
+
+task generateGroups(type: JavaExec) {
+    group = "Test"
+    description = "Run generated Groups"
+    classpath sourceSets.test.runtimeClasspath
+    main =  "ru.chibisov.aft.addressbook.generator.GroupDataGenerator"
+    args "-c", "1", "-f", "src/test/resources/generated/groups.json"
+}
+
+task generateContacts(type: JavaExec) {
+    group = "Test"
+    description = "Run generated Contacts"
+    classpath sourceSets.test.runtimeClasspath
+    main = "ru.chibisov.aft.addressbook.generator.ContactDataGenerator"
+    args "-c", "1", "-f", "src/test/resources/generated/contacts.json"
 }
 
 test {
