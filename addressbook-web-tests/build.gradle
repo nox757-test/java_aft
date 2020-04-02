@@ -16,7 +16,7 @@ task generateGroups(type: JavaExec) {
     group = "Test"
     description = "Run generated Groups"
     classpath sourceSets.test.runtimeClasspath
-    main =  "ru.chibisov.aft.addressbook.generator.GroupDataGenerator"
+    main = "ru.chibisov.aft.addressbook.generator.GroupDataGenerator"
     args "-c", "3", "-f", "src/test/resources/generated/groups.json"
 }
 
@@ -30,4 +30,20 @@ task generateContacts(type: JavaExec) {
 
 test {
     useTestNG()
+    if (project.hasProperty("browser")) {
+        systemProperty "browser", "${browser}"
+    } else {
+        systemProperty "browser", "chrome"
+    }
+}
+
+//Пример использования файла с конфигурациями
+def props = new Properties()
+file("src/test/resources/properties/stand.properties").withInputStream { props.load(it) }
+
+task testExample(type: Test) {
+    useTestNG() {
+        suites "src/test/resources/suites/suites_group.xml"
+    }
+    systemProperty "browser", props.getProperty("browser")
 }

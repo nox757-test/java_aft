@@ -2,9 +2,16 @@ package ru.chibisov.aft.addressbook.appmanager;
 
 import org.openqa.selenium.WebDriver;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
+
 import static org.testng.Assert.fail;
 
 public class ApplicationManager {
+
+    private final Properties properties;
 
     private WebDriver driver;
     private StringBuffer verificationErrors = new StringBuffer();
@@ -18,9 +25,12 @@ public class ApplicationManager {
 
     public ApplicationManager(String browserType) {
         this.browserType = browserType;
+        this.properties = new Properties();
     }
 
-    public void init() {
+    public void init() throws IOException {
+        String local = System.getProperty("target", "src/test/resources/properties/stand.properties");
+        properties.load(new FileReader(new File(local)));
 
         driver = BrowserTypes.getType(browserType).create();
 
@@ -29,8 +39,8 @@ public class ApplicationManager {
         groupHelper = new GroupHelper(driver);
         navigationHelper = new NavigationHelper(driver);
 
-        driver.get("http://localhost/addressbook/");
-        sessionHelper.login("admin", "secret");
+        driver.get(properties.getProperty("web.baseUrl"));
+        sessionHelper.login(properties.getProperty("web.user"), properties.getProperty("web.pass"));
     }
 
     public void quit() {
