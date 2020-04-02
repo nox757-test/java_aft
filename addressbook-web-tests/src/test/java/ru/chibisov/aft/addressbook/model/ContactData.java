@@ -1,26 +1,68 @@
 package ru.chibisov.aft.addressbook.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
+import org.hibernate.annotations.Type;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Entity
+@Table(name = "addressbook")
 public class ContactData {
 
-    private transient int id;
+    @Id
+    @Column(name = "id")
+    private int id;
     private String firstName;
     private String middleName;
     private String lastName;
     private String nickName;
+
+    @Transient
     private String groupName;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "address_in_groups",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+    private Set<GroupData> groups = new HashSet<>();
+
+    @Column(name = "mobile")
+    @Type(type = "text")
     private String mobilePhone;
+    @Column(name = "home")
+    @Type(type = "text")
     private String homePhone;
+    @Column(name = "work")
+    @Type(type = "text")
     private String workPhone;
+
+    @Transient
     private String allPhones;
 
+    @Column(name = "address")
+    @Type(type = "text")
     private String postAddress;
+    @Column(name = "email")
+    @Type(type = "text")
     private String email1;
+    @Type(type = "text")
     private String email2;
+    @Type(type = "text")
     private String email3;
+
+    @Transient
     private List<String> allEmails = null;
 
     public ContactData() {
@@ -167,6 +209,15 @@ public class ContactData {
 
     public ContactData setPostAddress(String postAddress) {
         this.postAddress = postAddress;
+        return this;
+    }
+
+    public Set<GroupData> getGroups() {
+        return groups;
+    }
+
+    public ContactData setGroups(Set<GroupData> groups) {
+        this.groups = groups;
         return this;
     }
 

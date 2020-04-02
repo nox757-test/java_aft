@@ -1,6 +1,9 @@
 package ru.chibisov.aft.addressbook.tests;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import org.hamcrest.CoreMatchers;
@@ -11,6 +14,7 @@ import ru.chibisov.aft.addressbook.model.GroupData;
 import ru.chibisov.aft.addressbook.model.GroupData;
 import ru.chibisov.aft.addressbook.model.Groups;
 
+import javax.persistence.Id;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,7 +28,17 @@ public class GroupCreationTests extends TestBase {
     public Iterator<Object[]> readGroups() throws IOException {
         try (JsonReader reader = new JsonReader(new FileReader(
                 new File("src/test/resources/generated/groups.json")))) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+                @Override
+                public boolean shouldSkipField(FieldAttributes f) {
+                    return f.getAnnotation(Id.class) != null;
+                }
+
+                @Override
+                public boolean shouldSkipClass(Class<?> clazz) {
+                    return false;
+                }
+            }).create();
             List<GroupData> contacts = gson.fromJson(reader, new TypeToken<List<GroupData>>() {
             }.getType());
             return contacts.stream()

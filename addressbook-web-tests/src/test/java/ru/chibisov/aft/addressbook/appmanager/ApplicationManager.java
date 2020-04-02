@@ -1,6 +1,12 @@
 package ru.chibisov.aft.addressbook.appmanager;
 
 import org.openqa.selenium.WebDriver;
+import ru.chibisov.aft.addressbook.appmanager.db.DbHelper;
+import ru.chibisov.aft.addressbook.appmanager.db.SessionUtil;
+import ru.chibisov.aft.addressbook.appmanager.ui.ContactHelper;
+import ru.chibisov.aft.addressbook.appmanager.ui.GroupHelper;
+import ru.chibisov.aft.addressbook.appmanager.ui.NavigationHelper;
+import ru.chibisov.aft.addressbook.appmanager.ui.SessionHelper;
 
 import java.io.File;
 import java.io.FileReader;
@@ -20,6 +26,7 @@ public class ApplicationManager {
     private ContactHelper contactHelper;
     private GroupHelper groupHelper;
     private NavigationHelper navigationHelper;
+    private DbHelper dbHelper;
 
     private final String browserType;
 
@@ -38,6 +45,7 @@ public class ApplicationManager {
         contactHelper = new ContactHelper(driver);
         groupHelper = new GroupHelper(driver);
         navigationHelper = new NavigationHelper(driver);
+        dbHelper = new DbHelper();
 
         driver.get(properties.getProperty("web.baseUrl"));
         sessionHelper.login(properties.getProperty("web.user"), properties.getProperty("web.pass"));
@@ -69,5 +77,9 @@ public class ApplicationManager {
 
     public NavigationHelper goTo() {
         return navigationHelper;
+    }
+
+    public DbHelper db() {
+        return dbHelper;
     }
 }

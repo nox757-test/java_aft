@@ -1,4 +1,4 @@
-package ru.chibisov.aft.addressbook.appmanager;
+package ru.chibisov.aft.addressbook.appmanager.ui;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;

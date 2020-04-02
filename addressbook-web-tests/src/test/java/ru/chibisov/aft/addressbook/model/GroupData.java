@@ -1,11 +1,34 @@
 package ru.chibisov.aft.addressbook.model;
 
+import org.hibernate.annotations.Type;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "group_list")
 public class GroupData {
 
-    private transient int id;
+    @Id
+    @Column(name = "group_id")
+    private int id;
+
+    @Column(name = "group_header")
+    @Type(type = "text")
     private String header;
+    @Column(name = "group_name")
     private String name;
+    @Column(name = "group_footer")
+    @Type(type = "text")
     private String footer;
+
+    @ManyToMany(mappedBy = "groups")
+    private Set<ContactData> contacts = new HashSet<>();
 
     public String getHeader() {
         return header;
@@ -40,6 +63,15 @@ public class GroupData {
 
     public GroupData setFooter(String footer) {
         this.footer = footer;
+        return this;
+    }
+
+    public Set<ContactData> getContacts() {
+        return contacts;
+    }
+
+    public GroupData setContacts(Set<ContactData> contacts) {
+        this.contacts = contacts;
         return this;
     }
 

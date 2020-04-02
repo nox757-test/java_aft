@@ -1,6 +1,9 @@
 package ru.chibisov.aft.addressbook.tests;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import org.hamcrest.CoreMatchers;
@@ -10,6 +13,7 @@ import org.testng.annotations.Test;
 import ru.chibisov.aft.addressbook.model.ContactData;
 import ru.chibisov.aft.addressbook.model.Contacts;
 
+import javax.persistence.Id;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,7 +27,17 @@ public class ContactCreationTests extends TestBase {
     public Iterator<Object[]> readContacts() throws IOException {
         try (JsonReader reader = new JsonReader(new FileReader(
                 new File("src/test/resources/generated/contacts.json")))) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+                @Override
+                public boolean shouldSkipField(FieldAttributes f) {
+                    return f.getAnnotation(Id.class) != null;
+                }
+
+                @Override
+                public boolean shouldSkipClass(Class<?> clazz) {
+                    return false;
+                }
+            }).create();
             List<ContactData> contacts = gson.fromJson(reader, new TypeToken<List<ContactData>>() {
             }.getType());
             return contacts.stream()
