@@ -17,7 +17,7 @@ task generateGroups(type: JavaExec) {
     description = "Run generated Groups"
     classpath sourceSets.test.runtimeClasspath
     main =  "ru.chibisov.aft.addressbook.generator.GroupDataGenerator"
-    args "-c", "1", "-f", "src/test/resources/generated/groups.json"
+    args "-c", "3", "-f", "src/test/resources/generated/groups.json"
 }
 
 task generateContacts(type: JavaExec) {
@@ -25,7 +25,7 @@ task generateContacts(type: JavaExec) {
     description = "Run generated Contacts"
     classpath sourceSets.test.runtimeClasspath
     main = "ru.chibisov.aft.addressbook.generator.ContactDataGenerator"
-    args "-c", "1", "-f", "src/test/resources/generated/contacts.json"
+    args "-c", "3", "-f", "src/test/resources/generated/contacts.json"
 }
 
 test {

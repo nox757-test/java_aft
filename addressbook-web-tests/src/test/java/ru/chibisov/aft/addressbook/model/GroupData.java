@@ -2,7 +2,7 @@ package ru.chibisov.aft.addressbook.model;
 
 public class GroupData {
 
-    private int id;
+    private transient int id;
     private String header;
     private String name;
     private String footer;

@@ -14,7 +14,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactDataGenerator extends AbstractGenerator {
+public class ContactDataGenerator {
 
     @Parameter(names = "-c", description = "Count contact")
     public int count;

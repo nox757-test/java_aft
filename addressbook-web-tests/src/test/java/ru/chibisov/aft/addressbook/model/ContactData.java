@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ContactData {
 
-    private int id;
+    private transient int id;
     private String firstName;
     private String middleName;
     private String lastName;
