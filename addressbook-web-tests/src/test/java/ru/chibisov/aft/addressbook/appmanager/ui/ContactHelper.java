@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import ru.chibisov.aft.addressbook.appmanager.db.DbHelper;
 import ru.chibisov.aft.addressbook.model.ContactData;
 import ru.chibisov.aft.addressbook.model.Contacts;
 
@@ -30,6 +31,10 @@ public class ContactHelper extends BaseHelper {
 
     public void pressUpdateButton() {
         clickByElement(By.xpath(".//*[@value='Update']"));
+    }
+
+    public void pressAddToButton() {
+        clickByElement(By.xpath(".//*[@value='Add to']"));
     }
 
     public void pressDeleteButton() {
@@ -94,7 +99,7 @@ public class ContactHelper extends BaseHelper {
         fillForm(contactData,
                 true);
         submitCreationContact();
-        contactData.setId(all().stream().mapToInt(ContactData::getId).max().getAsInt());
+        contactData.setId(new DbHelper().contacts().stream().mapToInt(ContactData::getId).max().getAsInt());
     }
 
     public void delete(ContactData deletedRowIndex) {
@@ -107,6 +112,12 @@ public class ContactHelper extends BaseHelper {
         pressEditButtonById(contactData.getId());
         fillForm(contactData, false);
         pressUpdateButton();
+    }
+
+    public void addToGroup(ContactData contactData, String groupName) {
+        selectContactById(contactData.getId());
+        selectDropDown(By.name("to_group"), groupName);
+        pressAddToButton();
     }
 
     public Contacts all() {

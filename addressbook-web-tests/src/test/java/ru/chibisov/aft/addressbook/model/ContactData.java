@@ -2,8 +2,10 @@ package ru.chibisov.aft.addressbook.model;
 
 
 import org.hibernate.annotations.Type;
+import ru.chibisov.aft.addressbook.appmanager.db.StringConverter;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -24,15 +26,19 @@ public class ContactData {
     @Id
     @Column(name = "id")
     private int id;
+    @Convert(converter = StringConverter.class)
     private String firstName;
+    @Convert(converter = StringConverter.class)
     private String middleName;
+    @Convert(converter = StringConverter.class)
     private String lastName;
+    @Convert(converter = StringConverter.class)
     private String nickName;
 
     @Transient
     private String groupName;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "address_in_groups",
             joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))

@@ -21,9 +21,8 @@ public class ContactEditTest extends TestBase {
         generatePreconditions();
         Contacts dataBefore = app.contact().all();
         ContactData contactData = dataBefore.iterator().next();
-        contactData = contactData.setMiddleName("mid_name2")
-                .setLastName("last_name2")
-                .setNickName("nickname2");
+        contactData = contactData.setFirstName("f_name2")
+                .setLastName("last_name2");
         app.contact().modify(contactData);
 
         Contacts contactsAfter = app.contact().all();

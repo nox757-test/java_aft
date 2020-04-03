@@ -35,6 +35,27 @@ public class DbHelper {
         return groups;
     }
 
+    public GroupData groupById(int id) {
+        Session session = null;
+        GroupData group;
+        try {
+            session = sessionFactory.openSession();
+            session.setCacheMode(CacheMode.IGNORE);
+            session.beginTransaction();
+            group = (GroupData) session.createQuery("from GroupData where group_id = :id")
+                    .setParameter("id", id).uniqueResult();
+            session.flush();
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return group;
+    }
+
     public List<ContactData> contacts() {
         Session session = null;
         List<ContactData> contacts;
