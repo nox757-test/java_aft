@@ -11,7 +11,7 @@ public class ContactEditTest extends TestBase {
 
     @BeforeMethod
     public void generatePreconditions() {
-        if (!app.contact().isThereContact()) {
+        if (app.db().contacts().size() == 0) {
             app.contact().createNew();
         }
     }
@@ -27,6 +27,21 @@ public class ContactEditTest extends TestBase {
         app.contact().modify(contactData);
 
         Contacts contactsAfter = app.contact().all();
+        MatcherAssert.assertThat(contactsAfter, CoreMatchers.equalTo(dataBefore.withAdd(contactData)));
+
+    }
+
+    @Test
+    public void updateContactDbTest() {
+        generatePreconditions();
+        Contacts dataBefore = new Contacts(app.db().contacts());
+        ContactData contactData = dataBefore.iterator().next();
+        contactData = contactData.setMiddleName("mid_name2")
+                .setLastName("last_name2")
+                .setNickName("nickname2");
+        app.contact().modify(contactData);
+
+        Contacts contactsAfter = new Contacts(app.db().contacts());
         MatcherAssert.assertThat(contactsAfter, CoreMatchers.equalTo(dataBefore.withAdd(contactData)));
 
     }

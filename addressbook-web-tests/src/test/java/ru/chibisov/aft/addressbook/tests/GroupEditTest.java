@@ -11,7 +11,7 @@ public class GroupEditTest extends TestBase {
 
     @BeforeMethod
     public void generatePreconditions() {
-        if (!app.group().isThereGroup()) {
+        if (app.db().groups().size() == 0) {
             app.group().createNew();
         }
     }
@@ -25,6 +25,19 @@ public class GroupEditTest extends TestBase {
         app.group().modify(changedData);
 
         Groups groupsAfter = app.group().all();
+        MatcherAssert.assertThat(groupsAfter, CoreMatchers.equalTo(groupsBefore));
+
+    }
+
+    @Test
+    public void editGroupDbTest() {
+        app.goTo().groupPage();
+        generatePreconditions();
+        Groups groupsBefore = new Groups(app.db().groups());
+        GroupData changedData = groupsBefore.iterator().next().setName("new_name_group2");
+        app.group().modify(changedData);
+
+        Groups groupsAfter = new Groups(app.db().groups());
         MatcherAssert.assertThat(groupsAfter, CoreMatchers.equalTo(groupsBefore));
 
     }

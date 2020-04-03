@@ -11,7 +11,7 @@ public class ContactDeleteTest extends TestBase {
 
     @BeforeMethod
     public void generatePreconditions() {
-        if (!app.contact().isThereContact()) {
+        if (app.db().contacts().size() == 0) {
             app.contact().createNew();
         }
     }
@@ -24,6 +24,18 @@ public class ContactDeleteTest extends TestBase {
         app.contact().delete(deletedContact);
 
         Contacts contactsAfter = app.contact().all();
+        MatcherAssert.assertThat(contactsAfter, CoreMatchers.equalTo(contactsBefore.withOut(deletedContact)));
+
+    }
+
+    @Test
+    public void deleteContactDbTest() {
+        generatePreconditions();
+        Contacts contactsBefore = new Contacts(app.db().contacts());
+        ContactData deletedContact = contactsBefore.iterator().next();
+        app.contact().delete(deletedContact);
+        app.goTo().contactPage();//delay action before db request
+        Contacts contactsAfter = new Contacts(app.db().contacts());
         MatcherAssert.assertThat(contactsAfter, CoreMatchers.equalTo(contactsBefore.withOut(deletedContact)));
 
     }

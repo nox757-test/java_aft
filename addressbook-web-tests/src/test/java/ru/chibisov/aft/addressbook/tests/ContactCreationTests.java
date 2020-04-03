@@ -57,6 +57,28 @@ public class ContactCreationTests extends TestBase {
 
         Contacts contactsAfter = app.contact().all();
         int id = contactsAfter.stream().mapToInt(ContactData::getId).max().getAsInt();
+        ContactData copyContactAsUi = new ContactData().setId(id)
+                .setFirstName(contactData.getFirstName())
+                .setLastName(contactData.getLastName())
+                .setPostAddress(contactData.getPostAddress())
+                .setEmail1(contactData.getEmail1())
+                .setEmail2(contactData.getEmail2())
+                .setEmail3(contactData.getEmail3())
+                .setHomePhone(contactData.getHomePhone())
+                .setWorkPhone(contactData.getWorkPhone())
+                .setMobilePhone(contactData.getMobilePhone());
+        MatcherAssert.assertThat(contactsAfter, CoreMatchers.equalTo(contactsBefore.withAdd(copyContactAsUi)));
+    }
+
+    @Test(dataProvider = "readContacts")
+    public void addNewContactDbTest(ContactData contactData) {
+        Contacts contactsBefore = new Contacts(app.db().contacts());
+        app.goTo().openCreationContactPage();
+        app.contact().fillForm(contactData, true);
+        app.contact().submitCreationContact();
+
+        Contacts contactsAfter = new Contacts(app.db().contacts());
+        int id = contactsAfter.stream().mapToInt(ContactData::getId).max().getAsInt();
         MatcherAssert.assertThat(contactsAfter, CoreMatchers.equalTo(contactsBefore.withAdd(contactData.setId(id))));
     }
 }

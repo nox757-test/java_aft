@@ -1,9 +1,9 @@
 package ru.chibisov.aft.addressbook.appmanager.db;
 
-import org.hibernate.Criteria;
+import org.hibernate.CacheMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.testng.annotations.Test;
+import ru.chibisov.aft.addressbook.model.ContactData;
 import ru.chibisov.aft.addressbook.model.GroupData;
 
 import java.util.List;
@@ -23,8 +23,6 @@ public class DbHelper {
             session = sessionFactory.openSession();
             session.beginTransaction();
             groups = session.createQuery("from GroupData").list();
-//            groups = session.createCriteria(GroupData.class).list();
-//            groups = session.createSQLQuery("select * from group_list", GroupData.class).list();
             session.flush();
             session.getTransaction().commit();
         } catch (Exception ex) {
@@ -35,5 +33,24 @@ public class DbHelper {
             }
         }
         return groups;
+    }
+
+    public List<ContactData> contacts() {
+        Session session = null;
+        List<ContactData> contacts;
+        try {
+            session = sessionFactory.openSession();
+            session.setCacheMode(CacheMode.IGNORE);
+            session.beginTransaction();
+            contacts = session.createQuery("from ContactData").list();
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return contacts;
     }
 }

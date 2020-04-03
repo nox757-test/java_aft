@@ -60,6 +60,23 @@ public class GroupCreationTests extends TestBase {
 
         Groups groupsAfter = app.group().all();
         int id = groupsAfter.stream().mapToInt(GroupData::getId).max().getAsInt();
+        GroupData copyToUi = new GroupData().setId(id).setName(addedGroup.getName());
+        MatcherAssert.assertThat(groupsAfter, CoreMatchers.equalTo(groupsBefore.withAdd(copyToUi)));
+
+    }
+
+
+    @Test(dataProvider = "readGroups")
+    public void addGroupDbTest(GroupData addedGroup) {
+        app.goTo().groupPage();
+        Groups groupsBefore = new Groups(app.db().groups());
+        app.group().openCreationGroupPage();
+        app.group().fillForm(addedGroup);
+        app.group().pressSubmitButton();
+        app.group().backToGroupPage();
+
+        Groups groupsAfter = new Groups(app.db().groups());
+        int id = groupsAfter.stream().mapToInt(GroupData::getId).max().getAsInt();
         MatcherAssert.assertThat(groupsAfter, CoreMatchers.equalTo(groupsBefore.withAdd(addedGroup.setId(id))));
 
     }
